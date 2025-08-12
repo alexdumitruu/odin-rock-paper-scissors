@@ -1,11 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock-Paper-Scissors</title>
 </head>
+
 <body>
-    <script src="/script.js"></script>
+    <button id="rock">Rock</button>
+    <button id="paper">Paper</button>
+    <button id="scissors">Scissors</button>
+
+    <div id="results"></div>
+
+    <script>
+        let humanScore = 0;
+        let computerScore = 0;
+
+        const resultsDiv = document.getElementById('results');
+
+        function updateResults(message) {
+            resultsDiv.innerHTML = `
+        <p>${message}</p>
+        <p>Player: ${humanScore} | Computer: ${computerScore}</p>
+    `;
+        }
+
+        function getComputerChoice() {
+            const a = Math.random();
+            if (a < 1 / 3) return "rock";
+            else if (a < 2 / 3) return "paper";
+            else return "scissors";
+        }
+
+        function playRound(playerSelection) {
+            if (humanScore >= 5 || computerScore >= 5) return; // stop if game over
+
+            const computerChoice = getComputerChoice();
+            let message = "";
+
+            if (playerSelection === computerChoice) {
+                message = `Draw! You both chose ${playerSelection}.`;
+            } else if (
+                (playerSelection === "rock" && computerChoice === "scissors") ||
+                (playerSelection === "paper" && computerChoice === "rock") ||
+                (playerSelection === "scissors" && computerChoice === "paper")
+            ) {
+                humanScore++;
+                message = `You win! ${playerSelection} beats ${computerChoice}.`;
+            } else {
+                computerScore++;
+                message = `You lose! ${computerChoice} beats ${playerSelection}.`;
+            }
+
+            updateResults(message);
+
+            if (humanScore === 5) {
+                resultsDiv.innerHTML += `<p>🎉 You won the game!</p>`;
+            } else if (computerScore === 5) {
+                resultsDiv.innerHTML += `<p>💀 Computer won the game!</p>`;
+            }
+        }
+
+        document.getElementById('rock').addEventListener('click', () => playRound('rock'));
+        document.getElementById('paper').addEventListener('click', () => playRound('paper'));
+        document.getElementById('scissors').addEventListener('click', () => playRound('scissors'));
+
+        updateResults("Game start! First to 5 wins.");
+    </script>
 </body>
+
 </html>
